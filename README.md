@@ -1,8 +1,10 @@
 # Library Management System
 
-Main Window is the first and basic session if the system.
+Main Window is the first and basic session of the system.
 
-Create Database sql script needs to be run before every other file in MySQL workbench, it will create all our tables and database.
+Create Database sql script needs to be run in MySQL workbench before any other file, it will create our database and tables
+with the necessary relations between them.
 
-The database will be stored by the name of "library", if a pre-existing database by same name exists, the sl script will delete it.
+The database will be stored by the name of "library", if a pre-existing database by same name exists, the sql script will delete it.
+
 lib.png is our background image. 
