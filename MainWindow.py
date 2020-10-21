@@ -4,6 +4,7 @@ from PIL import Image,ImageTk
 from tkinter import messagebox
 import sys
 import time
+from AddBook import addBook
 
 password = input("Enter password: ")
 
@@ -44,7 +45,7 @@ headingLabel = Label(headingFrame, text="Library Management", bg='black', fg='wh
 headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
 
 #Buttons
-btn1 = Button(window,text="Add Book Details",bg='black', fg='white') #command=addBook)
+btn1 = Button(window,text="Add Book Details",bg='black', fg='white' command=lambda : addBook(con))
 btn1.place(relx=0.275,rely=0.4, relwidth=0.45,relheight=0.1)
     
 btn2 = Button(window,text="Delete Book",bg='black', fg='white') #command=delete)
