@@ -5,13 +5,13 @@ USE library;
 
 CREATE TABLE books(
     book_id VARCHAR(6) PRIMARY KEY,
-    title VARCHAR(20),
-    author VARCHAR(20),
+    title VARCHAR(30),
+    author VARCHAR(50),
     status VARCHAR(2)
 );
 
 CREATE TABLE issued_books(
     book_id VARCHAR(6) PRIMARY KEY,
-    issued_to VARCHAR(20),
-    FOREIGN KEY(book_id) REFERENCES books
+    issued_to VARCHAR(8),
+    FOREIGN KEY(book_id) REFERENCES books(book_id)
 );
