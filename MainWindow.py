@@ -1,16 +1,16 @@
-from tkinter import Tk,Label,Frame,Canvas,Button
+#Module imports
+from tkinter import Tk,Label,Frame,Canvas,Button,Toplevel
 import pymysql as sql
 from PIL import Image,ImageTk
-from tkinter import messagebox
-import sys
 import time
-from AddBook import addBook
+import sys
+from Functions import addBook,deleteBook
 
 password = input("Enter password: ")
 
 #Establish Connection
 try:
-    con = sql.connect(host="localhost", user="root", password=password, database="library")   
+    con = sql.connect(host="localhost", user="root", password=password, database="library")  
     print("Connection Sucessful")
     print("Open GUI window")
 except:
@@ -45,10 +45,10 @@ headingLabel = Label(headingFrame, text="Library Management", bg='black', fg='wh
 headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
 
 #Buttons
-btn1 = Button(window,text="Add Book Details",bg='black', fg='white' command=lambda : addBook(con))
+btn1 = Button(window,text="Add Book Details",bg='black', fg='white', command=lambda: addBook(con))
 btn1.place(relx=0.275,rely=0.4, relwidth=0.45,relheight=0.1)
     
-btn2 = Button(window,text="Delete Book",bg='black', fg='white') #command=delete)
+btn2 = Button(window,text="Delete Book",bg='black', fg='white', command=lambda: deleteBook(con))
 btn2.place(relx=0.275,rely=0.5, relwidth=0.45,relheight=0.1)
     
 btn3 = Button(window,text="View Book List",bg='black', fg='white') #command=View)
