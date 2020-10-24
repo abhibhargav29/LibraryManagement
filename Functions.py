@@ -268,3 +268,160 @@ def ShowList(con):
 
     #main loop
     viewWindow.mainloop()
+
+
+#*******************************************************************************************************************************
+#For issuing book
+
+def registerIssue(con,bookid,studentid):
+    cur = con.cursor()
+    query1 = f"INSERT INTO issued_books VALUES('{bookid.get()}','{studentid.get()}')"
+    query2 = f"UPDATE books SET status='NA' WHERE book_id = '{bookid.get()}'"
+    try:
+        cur.execute(query1)
+        con.commit()
+        cur.execute(query2)
+        con.commit()
+        messagebox.showinfo("Success","Book Issued")
+    except sql.err.IntegrityError:
+        messagebox.showinfo("Failed","Enter an available bookid")
+    except sql.err.DataError:
+        messagebox.showinfo("Failed","Enter valid bookid and studentid")
+    except:
+        messagebox.showinfo("Failed","Something went wrong")
+    issueWindow.destroy()
+
+def issueBook(con):
+    global issueWindow
+
+    #GUI window
+    issueWindow = Toplevel()
+
+    #Window basics 
+    issueWindow.title("Issue Book")
+    issueWindow.geometry("600x600")
+    issueWindow.configure(bg="white")     
+
+    #Background
+    bgImg = Image.open("lib.png")
+
+    bgHeight,bgWidth = bgImg.size 
+    bgHeight = int(bgHeight/7.16); bgWidth = int(bgWidth/7.72)
+    bgImg = bgImg.resize((bgWidth,bgHeight),Image.ANTIALIAS)
+
+    Img = ImageTk.PhotoImage(bgImg)
+    Background = Canvas(issueWindow)
+    Background.create_image(300,340,image=Img)
+    Background.configure(bg="white",width=bgWidth,height=bgHeight)
+    Background.pack(expand=True)
+    
+    #Heading
+    headingFrame = Frame(issueWindow,bg="grey",bd=5)
+    headingFrame.place(relx=0.2,rely=0.1,relwidth=0.6,relheight=0.16)
+    headingLabel = Label(headingFrame, text="Issue Book", bg='black', fg='white', font=('Cailibri',20))
+    headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
+    
+    #Labels
+    labelFrame = Frame(issueWindow, bg="black")
+    labelFrame.place(relx=0.1,rely=0.5,relwidth=0.8,relheight=0.2)
+    
+    idLabel = Label(labelFrame, bg="black", fg="white", text="Book Id:", anchor="w", font=("Calibri",15))
+    idLabel.place(relx=0.01,rely=0.25,relwidth=0.3,relheight=0.2)
+
+    sidLabel = Label(labelFrame, bg="black", fg="white", text="Student Id:", anchor="w", font=("Calibri",15))
+    sidLabel.place(relx=0.01,rely=0.65,relwidth=0.3,relheight=0.2)
+    
+    #Info Variables
+    BookId = StringVar()
+    StudentId = StringVar()
+
+    #Input Feilds
+    idEntry = Entry(labelFrame, textvariable=BookId, font=("Calibri",15))
+    idEntry.place(relx=0.32,rely=0.25,relwidth=0.6,relheight=0.2)
+
+    sidEntry = Entry(labelFrame, textvariable=StudentId, font=("Calibri",15))
+    sidEntry.place(relx=0.32,rely=0.65,relwidth=0.6,relheight=0.2)
+
+    #Buttons
+    Submitbtn = Button(issueWindow, text="Issue", command=lambda: registerIssue(con,BookId,StudentId))
+    Submitbtn.configure(font=("Calibri",14), bg='white', fg='black')
+    Submitbtn.place(relx=0.300, rely=0.9, relwidth=0.20,relheight=0.08)
+    
+    Exitbtn = Button(issueWindow, text="Cancel", font=("Calibri",14), bg='white', fg='black', command=issueWindow.destroy)
+    Exitbtn.place(relx=0.500, rely=0.9, relwidth=0.20,relheight=0.08)
+
+    #main loop
+    issueWindow.mainloop()
+
+
+#*******************************************************************************************************************************
+#For returning book
+
+def deleteIssue(con,bookid):
+    cur = con.cursor()
+    query1 = f"DELETE FROM issued_books WHERE book_id = '{bookid.get()}'"
+    query2 = f"UPDATE books SET status='A' WHERE book_id = '{bookid.get()}'"
+    try:
+        cur.execute(query1)
+        con.commit()
+        cur.execute(query2)
+        con.commit()
+        messagebox.showinfo("Success","Book Returned")
+    except:
+        messagebox.showinfo("Failed","Something went wrong")
+    returnWindow.destroy()
+
+def returnBook(con):
+    global returnWindow
+
+    #GUI window
+    returnWindow = Toplevel()
+
+    #Window basics 
+    returnWindow.title("Issue Book")
+    returnWindow.geometry("600x600")
+    returnWindow.configure(bg="white")     
+
+    #Background
+    bgImg = Image.open("lib.png")
+
+    bgHeight,bgWidth = bgImg.size 
+    bgHeight = int(bgHeight/7.16); bgWidth = int(bgWidth/7.72)
+    bgImg = bgImg.resize((bgWidth,bgHeight),Image.ANTIALIAS)
+
+    Img = ImageTk.PhotoImage(bgImg)
+    Background = Canvas(returnWindow)
+    Background.create_image(300,340,image=Img)
+    Background.configure(bg="white",width=bgWidth,height=bgHeight)
+    Background.pack(expand=True)
+    
+    #Heading
+    headingFrame = Frame(returnWindow,bg="grey",bd=5)
+    headingFrame.place(relx=0.2,rely=0.1,relwidth=0.6,relheight=0.16)
+    headingLabel = Label(headingFrame, text="Issue Book", bg='black', fg='white', font=('Cailibri',20))
+    headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
+    
+    #Labels
+    labelFrame = Frame(returnWindow, bg="black")
+    labelFrame.place(relx=0.1,rely=0.5,relwidth=0.8,relheight=0.2)
+    
+    idLabel = Label(labelFrame, bg="black", fg="white", text="Book Id:", anchor="w", font=("Calibri",15))
+    idLabel.place(relx=0.01,rely=0.45,relwidth=0.3,relheight=0.2)
+    
+    #Info Variables
+    BookId = StringVar()
+
+    #Input Feilds
+    idEntry = Entry(labelFrame, textvariable=BookId, font=("Calibri",15))
+    idEntry.place(relx=0.32,rely=0.45,relwidth=0.6,relheight=0.2)
+
+    #Buttons
+    Submitbtn = Button(returnWindow, text="Return", command=lambda: deleteIssue(con,BookId))
+    Submitbtn.configure(font=("Calibri",14), bg='white', fg='black')
+    Submitbtn.place(relx=0.300, rely=0.9, relwidth=0.20,relheight=0.08)
+    
+    Exitbtn = Button(returnWindow, text="Cancel", font=("Calibri",14), bg='white', fg='black', command=returnWindow.destroy)
+    Exitbtn.place(relx=0.500, rely=0.9, relwidth=0.20,relheight=0.08)
+
+    #main loop
+    returnWindow.mainloop()
