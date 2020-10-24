@@ -4,7 +4,7 @@ import pymysql as sql
 from PIL import Image,ImageTk
 import time
 import sys
-from Functions import addBook,deleteBook,ShowList
+from Functions import addBook,deleteBook,ShowList,issueBook,returnBook
 
 password = input("Enter password: ")
 
@@ -54,10 +54,10 @@ btn2.place(relx=0.275,rely=0.5, relwidth=0.45,relheight=0.1)
 btn3 = Button(window,text="View Book List",bg='black', fg='white', command=lambda: ShowList(con))
 btn3.place(relx=0.275,rely=0.6, relwidth=0.45,relheight=0.1)
     
-btn4 = Button(window,text="Issue Book to Student",bg='black', fg='white') #command = issueBook)
+btn4 = Button(window,text="Issue Book to Student",bg='black', fg='white', command =lambda : issueBook(con))
 btn4.place(relx=0.275,rely=0.7, relwidth=0.45,relheight=0.1)
     
-btn5 = Button(window,text="Return Book",bg='black', fg='white') #command = returnBook)
+btn5 = Button(window,text="Return Book",bg='black', fg='white', command =lambda: returnBook(con))
 btn5.place(relx=0.275,rely=0.8, relwidth=0.45,relheight=0.1)
 
 #main loop
