@@ -1,7 +1,8 @@
-from tkinter import Tk,Label,Frame,Canvas,Button,Toplevel,Entry,END,DISABLED,StringVar
+from tkinter import Tk,Label,Frame,Canvas,Button,Toplevel,Entry,StringVar,ttk
 import pymysql as sql
 from PIL import Image,ImageTk 
 from tkinter import messagebox
+from datetime import datetime
 
 #*******************************************************************************************************************************
 #For adding book
@@ -217,9 +218,17 @@ def ShowList(con):
     headingLabel = Label(headingFrame, text="View Books", bg='black', fg='white', font=('Cailibri',20))
     headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
     
-    #Labels
-    labelFrame = Frame(viewWindow, bg="white")
-    labelFrame.place(relx=0.1,rely=0.4,relwidth=0.8,relheight=0.4)
+    #Book Tree
+    TreeFrame = ttk.Treeview(viewWindow, columns=(1,2,3,4), show="headings")
+    TreeFrame.place(relx=0.1,rely=0.3,relwidth=0.8,relheight=0.5)
+    TreeFrame.column(1, width = 4) 
+    TreeFrame.column(2, width = 75) 
+    TreeFrame.column(3, width = 50)
+    TreeFrame.column(4, width = 1) 
+    TreeFrame.heading(1, text="BookId")
+    TreeFrame.heading(2, text="Title")
+    TreeFrame.heading(3, text="Author")
+    TreeFrame.heading(4, text="Status")
 
     #Buttons
     Deletebtn = Button(viewWindow, text="Delete All", command=lambda: deleteAll(con))
@@ -230,42 +239,18 @@ def ShowList(con):
     Exitbtn.place(relx=0.500, rely=0.9, relwidth=0.20,relheight=0.08)
 
     #Main Text
-    query1 = "SELECT * FROM books LIMIT 9"
+    query1 = "SELECT * FROM books"
     try:
         cur=con.cursor() 
-        n = cur.execute(query1)
+        cur.execute(query1)
         rows = cur.fetchall()
-        for i in range(0,10):
-            for j in range(0,4):
-                if(i==0):
-                    e = Entry(labelFrame, font=("Calibri",12,"bold"))
-                else:
-                    e = Entry(labelFrame, font=("Calibri",12))    
-                if(j==0):
-                    e.configure(width=7)
-                elif(j==1):
-                    e.configure(width=24)
-                elif(j==2):
-                    e.configure(width=20)
-                else:
-                    e.configure(width=7)
-                e.grid(row=i, column=j)
-                if(i==0 and j==0):
-                    e.insert(END, "BookId")
-                elif(i==0 and j==1):
-                    e.insert(END, "Title")
-                elif(i==0 and j==2):
-                    e.insert(END, "Author")
-                elif(i==0 and j==3):
-                    e.insert(END, "Status")
-                elif(i<=n):
-                    e.insert(END, rows[i-1][j])
-                e.configure(state=DISABLED)
+        for row in rows:
+            TreeFrame.insert("","end",values=row)
     except:
         messagebox.showinfo("Failed","Unable to fetch book details")
         viewWindow.destroy()
         return
-
+    
     #main loop
     viewWindow.mainloop()
 
@@ -275,7 +260,9 @@ def ShowList(con):
 
 def registerIssue(con,bookid,studentid):
     cur = con.cursor()
-    query1 = f"INSERT INTO issued_books VALUES('{bookid.get()}','{studentid.get()}')"
+    now = datetime.now().date()
+    date = str(now)
+    query1 = f"INSERT INTO issued_books VALUES('{bookid.get()}','{studentid.get()}','{date}')"
     query2 = f"UPDATE books SET status='NA' WHERE book_id = '{bookid.get()}'"
     try:
         cur.execute(query1)
@@ -359,6 +346,17 @@ def issueBook(con):
 
 def deleteIssue(con,bookid):
     cur = con.cursor()
+    try:
+        query0 = f"SELECT CURDATE()-issue_date FROM issued_books WHERE book_id='{bookid.get()}'"
+        cur.execute(query0)
+        days = cur.fetchall()
+        fine=0
+        if(int(days[0][0])>15):
+            fine+= (int(days[0][0])-15)*2
+        else:
+            fine=0
+    except:
+        fine=0
     query1 = f"DELETE FROM issued_books WHERE book_id = '{bookid.get()}'"
     query2 = f"UPDATE books SET status='A' WHERE book_id = '{bookid.get()}'"
     try:
@@ -366,7 +364,7 @@ def deleteIssue(con,bookid):
         con.commit()
         cur.execute(query2)
         con.commit()
-        messagebox.showinfo("Success","Book Returned")
+        messagebox.showinfo("Success",f"Book Returned, Fine Amount:{fine}")
     except:
         messagebox.showinfo("Failed","Something went wrong")
     returnWindow.destroy()
@@ -378,7 +376,7 @@ def returnBook(con):
     returnWindow = Toplevel()
 
     #Window basics 
-    returnWindow.title("Issue Book")
+    returnWindow.title("Return Book")
     returnWindow.geometry("600x600")
     returnWindow.configure(bg="white")     
 
@@ -398,7 +396,7 @@ def returnBook(con):
     #Heading
     headingFrame = Frame(returnWindow,bg="grey",bd=5)
     headingFrame.place(relx=0.2,rely=0.1,relwidth=0.6,relheight=0.16)
-    headingLabel = Label(headingFrame, text="Issue Book", bg='black', fg='white', font=('Cailibri',20))
+    headingLabel = Label(headingFrame, text="Return Book", bg='black', fg='white', font=('Cailibri',20))
     headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
     
     #Labels
