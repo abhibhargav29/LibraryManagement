@@ -9,6 +9,6 @@ and primary key for books. The database will be stored by the name of "library",
 Main Window is the first and main session of the system. Before starting it asks for password, this is the password for your localhost connection of mysql that
 you filled while installing mysql. Then the gui window opens with various button, each of which will open the corresponding window on clicking.
 
-Function.py has all our child windows structure and also all the database related work.
+Function.py has all our child windows structure and also all the database related work. It has addbook, deletebook, viewbooks, issuebook and return book options.
 
 lib.png is our background image. 
