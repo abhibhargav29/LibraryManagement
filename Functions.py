@@ -7,6 +7,7 @@ from datetime import datetime
 #*******************************************************************************************************************************
 #For adding book
 
+#Function to execute query
 def registerBook(con, BookId, BookName, BookAuthor):
     cur = con.cursor()
     status = "A"
@@ -21,8 +22,9 @@ def registerBook(con, BookId, BookName, BookAuthor):
         messagebox.showinfo("Failed","Please enter attributes within limits")
     except Exception:
         messagebox.showinfo("Failed","Something went wrong")
-    addWindow.destroy()
+    addWindow.destroy()  #Destroy window after adding book
 
+#Function to create add book window
 def addBook(con):
     global addWindow
 
@@ -65,14 +67,13 @@ def addBook(con):
     
     authorLabel = Label(labelFrame, bg="black", fg="white", text="Book Author:", anchor="w", font=("Calibri",13))
     authorLabel.place(relx=0.01,rely=0.80,relwidth=0.3,relheight=0.12)
-
     
     #Info Variables
     BookId = StringVar()
     BookName = StringVar()
     BookAuthor = StringVar()
 
-    #Input Feilds
+    #Input Fields
     idEntry = Entry(labelFrame, textvariable=BookId, font=("Calibri",13))
     idEntry.place(relx=0.32,rely=0.1,relwidth=0.6,relheight=0.12)
     
@@ -97,8 +98,11 @@ def addBook(con):
 #*******************************************************************************************************************************
 #For deleting book
 
+#Function to execute query
 def deleteRecord(con,bookid):
     cur = con.cursor()
+    
+    #We need to delete from issued books table also because it references our books table
     query1 = f"DELETE FROM issued_books WHERE book_id = '{bookid.get()}'"
     query2 = f"DELETE FROM books WHERE book_id ='{bookid.get()}'"
     try:
@@ -170,6 +174,7 @@ def deleteBook(con):
 #*******************************************************************************************************************************
 #For Viewing List
 
+#Function to execute query
 def deleteAll(con):
     confirmation = messagebox.askquestion("Delete All","Are you sure you want to delete all records?")
     if(confirmation=="yes"):
@@ -219,6 +224,7 @@ def ShowList(con):
     headingLabel.place(relx=0,rely=0, relwidth=1, relheight=1)
     
     #Book Tree
+    #This display widget will display our records neatly
     TreeFrame = ttk.Treeview(viewWindow, columns=(1,2,3,4), show="headings")
     TreeFrame.place(relx=0.1,rely=0.3,relwidth=0.8,relheight=0.5)
     TreeFrame.column(1, width = 4) 
@@ -238,7 +244,7 @@ def ShowList(con):
     Exitbtn = Button(viewWindow, text="Cancel", font=("Calibri",14), bg='white', fg='black', command=viewWindow.destroy)
     Exitbtn.place(relx=0.500, rely=0.9, relwidth=0.20,relheight=0.08)
 
-    #Main Text
+    #Filling our tree widget
     query1 = "SELECT * FROM books"
     try:
         cur=con.cursor() 
