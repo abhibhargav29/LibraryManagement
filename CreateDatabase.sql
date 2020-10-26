@@ -12,6 +12,7 @@ CREATE TABLE books(
 
 CREATE TABLE issued_books(
     book_id VARCHAR(6) PRIMARY KEY,
-    issued_to VARCHAR(8),
+    issued_to VARCHAR(8) NOT NULL,
+    issue_date VARCHAR(10) NOT NULL,
     FOREIGN KEY(book_id) REFERENCES books(book_id)
 );
