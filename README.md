@@ -1,6 +1,6 @@
 # Library Management System
 
-Requirements: MySQL installed and configured, tkinter, python3, pymysql, pillow.
+<ins>Requirements</ins>: MySQL installed and configured, tkinter, python3, pymysql, pillow.
 
 <p align="justify">
 Create Database sql script needs to be run in MySQL workbench before any other file, it will create our database and tables
